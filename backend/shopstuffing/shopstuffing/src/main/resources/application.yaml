@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: shopstuffing
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/ShopStuffingDB
+
+jwt:
+  signerKey: "PTHWMfnVCJFIXp1pRSPPRh4UbFcAIXBEp7GhaNzi/f0Fa+0rzMjVdNnpP7Pt8Zzv"
+

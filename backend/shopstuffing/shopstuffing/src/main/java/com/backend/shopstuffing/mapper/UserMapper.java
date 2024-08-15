@@ -1,6 +1,7 @@
 package com.backend.shopstuffing.mapper;
 
 import com.backend.shopstuffing.dto.request.UserCreateRequest;
+import com.backend.shopstuffing.dto.request.UserUpdateRequest;
 import com.backend.shopstuffing.dto.response.UserResponse;
 import com.backend.shopstuffing.model.User;
 
@@ -22,5 +23,12 @@ public class UserMapper {
                 .firstName(user.getFirstname())
                 .lastName(user.getLastname())
                 .build();
+    }
+
+    public static void updateUser(User user, UserUpdateRequest request) {
+        user.setPassword(request.getPassword());
+        user.setFirstname(request.getFirstName());
+        user.setLastname(request.getLastName());
+        user.setBirth(request.getBirth());
     }
 }

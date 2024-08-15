@@ -4,6 +4,8 @@ import com.backend.shopstuffing.dto.request.AuthenticationRequest;
 import com.backend.shopstuffing.dto.request.IntrospectRequest;
 import com.backend.shopstuffing.dto.response.AuthenticationResponse;
 import com.backend.shopstuffing.dto.response.IntrospectResponse;
+import com.backend.shopstuffing.exception.ApplicationException;
+import com.backend.shopstuffing.exception.AuthenticationErrorResponse;
 import com.backend.shopstuffing.model.User;
 import com.backend.shopstuffing.repository.IUserRepository;
 import com.backend.shopstuffing.service.IAuthenticationService;
@@ -14,6 +16,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,11 +41,11 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new NullPointerException());
+                .orElseThrow(() -> new ApplicationException(AuthenticationErrorResponse.UNAUTHENTICATED, HttpStatus.UNAUTHORIZED));
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if(!authenticated) {
-            return null;
+            throw new ApplicationException(AuthenticationErrorResponse.UNAUTHENTICATED, HttpStatus.UNAUTHORIZED);
         }
         return AuthenticationResponse.builder()
                 .token(generateToken(user))
@@ -67,7 +70,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
             return jwsObject.serialize();
         } catch (JOSEException e) {
-            throw new RuntimeException(e);
+            throw new ApplicationException(AuthenticationErrorResponse.UNAUTHENTICATION, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -104,7 +107,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         boolean verified = signedJWT.verify(verifier);
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
         if(!(verified && expiryTime.after(new Date()))) {
-           throw new JOSEException();
+            throw new ApplicationException(AuthenticationErrorResponse.UNAUTHENTICATED, HttpStatus.UNAUTHORIZED);
         }
         return signedJWT;
     }

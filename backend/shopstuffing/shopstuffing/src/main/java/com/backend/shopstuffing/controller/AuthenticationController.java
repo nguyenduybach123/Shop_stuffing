@@ -2,11 +2,14 @@ package com.backend.shopstuffing.controller;
 
 import com.backend.shopstuffing.dto.request.AuthenticationRequest;
 import com.backend.shopstuffing.dto.request.IntrospectRequest;
+import com.backend.shopstuffing.dto.response.ApiResponse;
 import com.backend.shopstuffing.dto.response.AuthenticationResponse;
 import com.backend.shopstuffing.dto.response.IntrospectResponse;
 import com.backend.shopstuffing.service.impl.AuthenticationServiceImpl;
 import com.nimbusds.jose.JOSEException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,19 +20,27 @@ import java.text.ParseException;
 
 @RestController
 @RequestMapping("/auth")
+@AllArgsConstructor
 public class AuthenticationController {
-    @Autowired
-    private AuthenticationServiceImpl authenticationService;
+    private final AuthenticationServiceImpl authenticationService;
 
     @PostMapping("/token")
-    ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         AuthenticationResponse result = authenticationService.authenticate(request);
-        return ResponseEntity.ok(result);
+
+        return ApiResponse.<AuthenticationResponse>builder()
+                .status(HttpStatus.OK.toString())
+                .data(result)
+                .build();
     }
 
     @PostMapping("/introspect")
-    ResponseEntity<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
+    public ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
-        return ResponseEntity.ok(result);
+
+        return ApiResponse.<IntrospectResponse>builder()
+                .status(HttpStatus.OK.toString())
+                .data(result)
+                .build();
     }
 }

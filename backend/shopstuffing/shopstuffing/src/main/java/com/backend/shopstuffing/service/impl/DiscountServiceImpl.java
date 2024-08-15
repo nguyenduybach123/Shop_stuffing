@@ -14,7 +14,6 @@ public class DiscountServiceImpl implements IDiscountService {
     @Autowired
     private IDiscountRepository discountRepo;
 
-
     @Override
     public List<Discount> findAllDiscount() {
         return discountRepo.findAll();

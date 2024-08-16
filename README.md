@@ -7,9 +7,9 @@
    - Học thêm các framework của Spring : Spring Data JPA, Spring Security
      
 5. CÔNG NGHỆ SỬ DỤNG :
-    > Frontend: NextJS, Tailwind CSS
-    > Backend: Spring (Spring boot, Spring Data JPA, Spring Security)
-    > Database: MongoDB
+    - Frontend: NextJS, Tailwind CSS
+    - Backend: Spring (Spring boot, Spring Data JPA, Spring Security)
+    - Database: MongoDB
    
 7. TÍNH NĂNG :
    - Login / Register (Zod validation, JWT)

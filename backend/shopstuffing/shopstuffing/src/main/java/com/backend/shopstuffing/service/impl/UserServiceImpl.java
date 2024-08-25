@@ -32,6 +32,7 @@ public class UserServiceImpl implements IUserService {
         if(userRepository.existsUserByUsername(request.getUsername())) {
             throw new ApplicationException(UserErrorResponse.USER_EXISTED, HttpStatus.BAD_REQUEST);
         }
+
         User user = UserMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 

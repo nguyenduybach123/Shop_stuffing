@@ -19,7 +19,7 @@ const Slider = () => {
     
   const {data, isLoading} = useQuery({
     queryKey: ['discount'],
-    queryFn: () => http.get<Slider[]>("/discount/")
+    queryFn: () => http.get<Slider[]>("/discount")
   });
   
   const slides = data?.data || [];

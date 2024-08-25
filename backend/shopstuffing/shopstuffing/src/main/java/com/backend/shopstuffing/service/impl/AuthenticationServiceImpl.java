@@ -2,11 +2,15 @@ package com.backend.shopstuffing.service.impl;
 
 import com.backend.shopstuffing.dto.request.AuthenticationRequest;
 import com.backend.shopstuffing.dto.request.IntrospectRequest;
+import com.backend.shopstuffing.dto.request.LogoutRequest;
+import com.backend.shopstuffing.dto.request.RefreshRequest;
 import com.backend.shopstuffing.dto.response.AuthenticationResponse;
 import com.backend.shopstuffing.dto.response.IntrospectResponse;
 import com.backend.shopstuffing.exception.ApplicationException;
 import com.backend.shopstuffing.exception.AuthenticationErrorResponse;
+import com.backend.shopstuffing.model.InvalidatedToken;
 import com.backend.shopstuffing.model.User;
+import com.backend.shopstuffing.repository.IInvalidatedTokenRepository;
 import com.backend.shopstuffing.repository.IUserRepository;
 import com.backend.shopstuffing.service.IAuthenticationService;
 import com.nimbusds.jose.*;
@@ -27,6 +31,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
+import java.util.UUID;
 
 @Service
 public class AuthenticationServiceImpl implements IAuthenticationService {
@@ -34,8 +39,17 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     @Value("${jwt.signerKey}")
     private String SIGNER_KEY;
 
+    @Value("${jwt.valid-duration}")
+    protected long VALID_DURATION;
+
+    @Value("${jwt.refreshable-duration}")
+    protected long REFRESHABLE_DURATION;
+
     @Autowired
     private IUserRepository userRepository;
+
+    @Autowired
+    private IInvalidatedTokenRepository invalidatedTokenRepository;
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -53,6 +67,44 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     }
 
     @Override
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws JOSEException, ParseException {
+        SignedJWT signToken = verifyToken(request.getToken(), true);
+
+        String jit = signToken.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+
+        String username = signToken.getJWTClaimsSet().getSubject();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ApplicationException(AuthenticationErrorResponse.UNAUTHENTICATED, HttpStatus.UNAUTHORIZED));
+
+        String token = generateToken(user);
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .build();
+    }
+
+    @Override
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        SignedJWT signToken = verifyToken(request.getToken(), true);
+
+        String jit = signToken.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+    }
+
+    @Override
     public String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -62,6 +114,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
+                .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -89,7 +142,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         boolean isValid = true;
 
         try{
-            verifyToken(token);
+            verifyToken(token, false);
         }
         catch (Exception ex) {
             isValid = false;
@@ -101,14 +154,28 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     }
 
     @Override
-    public SignedJWT verifyToken(String token) throws JOSEException, ParseException {
+    public SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+
         SignedJWT signedJWT = SignedJWT.parse(token);
+
+        Date expiryTime = (isRefresh)
+                ? new Date(signedJWT
+                    .getJWTClaimsSet()
+                    .getIssueTime()
+                    .toInstant()
+                    .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+                    .toEpochMilli())
+                : signedJWT.getJWTClaimsSet().getExpirationTime();
+
         boolean verified = signedJWT.verify(verifier);
-        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-        if(!(verified && expiryTime.after(new Date()))) {
+
+        if (!(verified && expiryTime.after(new Date())))
             throw new ApplicationException(AuthenticationErrorResponse.UNAUTHENTICATED, HttpStatus.UNAUTHORIZED);
-        }
+
+        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+            throw new ApplicationException(AuthenticationErrorResponse.UNAUTHENTICATED, HttpStatus.UNAUTHORIZED);
+
         return signedJWT;
     }
 }

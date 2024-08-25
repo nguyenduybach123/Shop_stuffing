@@ -4,6 +4,7 @@ import com.backend.shopstuffing.dto.request.UserCreateRequest;
 import com.backend.shopstuffing.dto.request.UserUpdateRequest;
 import com.backend.shopstuffing.dto.response.UserResponse;
 import com.backend.shopstuffing.model.User;
+import com.backend.shopstuffing.model.UserDetail;
 
 public class UserMapper {
     public static User toUser(UserCreateRequest request) {
@@ -22,6 +23,15 @@ public class UserMapper {
                 .username(user.getUsername())
                 .firstName(user.getFirstname())
                 .lastName(user.getLastname())
+                .build();
+    }
+
+    public static UserDetail toUserDetail(User user) {
+        return UserDetail.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .email(user.getEmail())
+                .roles(user.getRoles())
                 .build();
     }
 

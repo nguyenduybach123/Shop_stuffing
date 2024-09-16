@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IDiscountService {
     List<Discount> findAllDiscount();
+    List<Discount> findNotExpiredDiscounts();
 }

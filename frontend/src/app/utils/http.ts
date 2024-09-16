@@ -1,5 +1,15 @@
 import axios, { AxiosInstance } from "axios";
 
+type Error = {
+    message: string
+}
+
+export type HttpResponse<T> = {
+    status: string,
+    error: Error,
+    data: T
+}
+
 class Http {
     instance: AxiosInstance;
 

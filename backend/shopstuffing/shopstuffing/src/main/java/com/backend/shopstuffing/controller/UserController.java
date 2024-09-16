@@ -5,6 +5,7 @@ import com.backend.shopstuffing.dto.request.UserUpdateRequest;
 import com.backend.shopstuffing.dto.response.ApiResponse;
 import com.backend.shopstuffing.dto.response.UserResponse;
 import com.backend.shopstuffing.service.impl.UserServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

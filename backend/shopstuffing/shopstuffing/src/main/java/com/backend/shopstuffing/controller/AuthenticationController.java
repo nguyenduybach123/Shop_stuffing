@@ -8,6 +8,7 @@ import com.backend.shopstuffing.dto.response.UserResponse;
 import com.backend.shopstuffing.service.impl.AuthenticationServiceImpl;
 import com.backend.shopstuffing.service.impl.UserDetailServiceImpl;
 import com.nimbusds.jose.JOSEException;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ public class AuthenticationController {
     private final UserDetailServiceImpl userDetailService;
 
     @PostMapping("/login")
-    public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ApiResponse<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request) {
         AuthenticationResponse result = authenticationService.authenticate(request);
 
         return ApiResponse.<AuthenticationResponse>builder()

@@ -25,7 +25,20 @@ import org.springframework.web.filter.CorsFilter;
 public class AppConfig {
     @Value("${jwt.signerKey}")
     private String signerKey;
-    private final String[] PUBLIC_ENDPOINTS = {"/product","/discount","/auth/**"};
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/v2/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-ui.html",
+            "/product/**",
+            "/category/**",
+            "/discount/**",
+            "/auth/**"};
     private final String[] PRIVATE_ENDPOINTS = {"/user","/permission","/role"};
 
     @Autowired

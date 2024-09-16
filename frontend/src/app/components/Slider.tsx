@@ -5,7 +5,7 @@ import cn from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import http from "../utils/http";
+import http, { HttpResponse } from "../utils/http";
 
 type Slider = {
     id: string,
@@ -15,14 +15,14 @@ type Slider = {
     background: string
 }
 
-const Slider = () => {  
+const Slider = () => {
     
   const {data, isLoading} = useQuery({
     queryKey: ['discount'],
-    queryFn: () => http.get<Slider[]>("/discount")
+    queryFn: () => http.get<HttpResponse<Slider[]>>("/discount")
   });
   
-  const slides = data?.data || [];
+  const slides = data?.data?.data || [];
 
   const [current, setCurrent] = useState(0);
   
@@ -33,8 +33,6 @@ const Slider = () => {
 
 //     return () => clearInterval(interval);
 //   },[])
-
-  console.log(slides);
 
   return (
     <div className='h-[calc(100vh-80px)] overflow-hidden'>

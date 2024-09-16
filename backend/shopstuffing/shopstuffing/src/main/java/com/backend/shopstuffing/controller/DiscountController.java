@@ -28,4 +28,14 @@ public class DiscountController {
                 .data(discountService.findAllDiscount())
                 .build();
     }
+
+    @GetMapping("/not-expired")
+    public ApiResponse<List<Discount>> getAllDiscountNotExpired() {
+
+        return ApiResponse.<List<Discount>>builder()
+                .status(HttpStatus.OK.toString())
+                .data(discountService.findNotExpiredDiscounts())
+                .build();
+    }
+
 }

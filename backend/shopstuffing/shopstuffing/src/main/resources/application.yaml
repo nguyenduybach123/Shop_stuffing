@@ -9,3 +9,11 @@ jwt:
   signerKey: "PTHWMfnVCJFIXp1pRSPPRh4UbFcAIXBEp7GhaNzi/f0Fa+0rzMjVdNnpP7Pt8Zzv"
   valid-duration: 3600 # in second
   refreshable-duration: 36000 # in seconds
+
+open:
+  api:
+    title: API Document
+    version: v1.0.0
+    description: Test API Service
+    serverUrl: http://localhost:8080
+    serverName: server develop

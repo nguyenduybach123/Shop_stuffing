@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react";
-import { MenuIcon } from "./Icon";
+import { MenuIcon } from "../../../../components/Icon";
 import Link from "next/link";
 
-const Menu = () => {
+export const NavbarMenu = () => {
   const [open, setOpen] = useState(false);
   
   return (
@@ -25,5 +25,3 @@ const Menu = () => {
     </div>
   )
 }
-
-export default Menu;

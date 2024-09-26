@@ -1,8 +1,6 @@
 "use client"
-
-
 import { useRouter } from "next/navigation";
-import { SearchIcon } from "./Icon";
+import { SearchIcon } from "@/app/components/Icon";
 
 const SearchBar = () => {
  

@@ -50,6 +50,8 @@ export const LoginPage = () => {
   const [error, setError] = useState<UserError>({});
   const [message, setMessage] = useState("");
 
+  const isLoading = true;
+
   const formTitle =
     mode === MODE.LOGIN
       ? "Log in"
@@ -85,11 +87,6 @@ export const LoginPage = () => {
         console.log(err);
     }
   }
-
-  const {data, isLoading} = useQuery({
-    queryKey: ['discount'],
-    queryFn: () => {}
-  });
 
   const handleLogin = async () => {
     const userLogin = {

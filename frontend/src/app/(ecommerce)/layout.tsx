@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import ReactQueryProvider from "./context/ReactQueryProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import "../../app/global.css"
+import 'swiper/css';
+import Footer from "./components/layout/Footer";
+import cn from "classnames";
+import Header from "./components/layout/Header/Header";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const queryClient = new QueryClient();
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,12 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-          <ReactQueryProvider>
-            <Navbar />
+      <body className={cn(inter.className, "relative")}>
+            <Header />
             {children}
             <Footer />
-          </ReactQueryProvider>
       </body>
     </html>
   );

@@ -1,12 +1,12 @@
 "use client"
-
 import { useState } from "react";
-import { BellIcon, CartIcon, UserCircleIcon } from "./Icon";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import CartModal from "./CartModal";
 
-const NavIcons = () => {
+import { BellIcon, CartIcon, UserCircleIcon } from "../../../../components/Icon";
+import { useRouter } from "next/navigation";
+import CartModal from "../../CartModal";
+
+export const NavbarMenuIcons = () => {
 
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -49,5 +49,3 @@ const NavIcons = () => {
     </div>
   )
 }
-
-export default NavIcons;

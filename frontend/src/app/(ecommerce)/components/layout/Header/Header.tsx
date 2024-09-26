@@ -1,12 +1,39 @@
+"use client"
 import Link from 'next/link';
-import Menu from './Menu';
 
-import SearchBar from './SearchBar';
-import NavIcons from './NavIcons';
+import SearchBar from '../../SearchBar';
+import { NavbarMenuIcons } from './NavbarMenuIcons';
+import { NavbarMenu } from './NavbarMenu';
+import React from 'react';
 
-const Navbar = () => {
+const Header = () => {
+
+  React.useEffect(() => {
+    function handleScroll() {
+      const header = document.getElementById('header');
+
+      if (header === null) {
+        return;
+      }
+
+      if (window.scrollY > 100) {
+        header.classList.remove('relative');
+        header.classList.add('stickey');
+      } else {
+        header.classList.remove('stickey');
+        header.classList.add('relative');
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className='h-20 px-4 md:px-8 lg:px-16 xl:32 2xl:px-64 relative'>
+    <div id="header" className="w-full bg-white h-20 px-4 md:px-8 lg:px-16 z-20">
       {/* MOBILE */}
       <div className='h-full flex items-center justify-between md:hidden'>
         <Link href='/'>
@@ -14,7 +41,7 @@ const Navbar = () => {
             CORN
           </div>
         </Link>
-        <Menu />
+        <NavbarMenu />
       </div>
       {/* BIGGER SCREENS */}
       <div className='hidden md:flex items-center justify-between gap-8 h-full'>
@@ -24,7 +51,7 @@ const Navbar = () => {
             <div className='text-2xl font-semibold text-slate-500'>CORN</div>
           </Link>
           <div className='hidden xl:flex gap-4'>
-            <Link href='/'>Homepage</Link>
+            <Link href='/'>Home</Link>
             <Link href='/'>Shop</Link>
             <Link href='/'>Deals</Link>
             <Link href='/'>About</Link>
@@ -34,11 +61,11 @@ const Navbar = () => {
         {/* RIGHT */}
         <div className='w-2/3 flex items-center justify-between gap-8'>
           <SearchBar />
-          <NavIcons />
+          <NavbarMenuIcons />
         </div>
       </div>
     </div>
   )
 }
  
-export default Navbar;
+export default Header;

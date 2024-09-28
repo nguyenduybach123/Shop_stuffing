@@ -18,7 +18,7 @@ export const Banner = ({title, description, background, image, isFetching = fals
         </div>
         {/* IMAGE CONTAINER */}
         <div className='h-1/2 xl:w-1/2 xl:h-full relative'>
-            <Image src={'https://images.pexels.com/photos/28124787/pexels-photo-28124787/free-photo-of-th-i-trang-dan-ba-d-cu-chan-dung.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load'} alt='' fill sizes="100%" className='object-cover rounded-tr-md rounded-br-md' />
+            <Image src={'https://images.pexels.com/photos/28124787/pexels-photo-28124787/free-photo-of-th-i-trang-dan-ba-d-cu-chan-dung.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load'} alt='' fill sizes="100%" className='object-cover  xl:rounded-r-md' />
         </div>
     </div>
   )

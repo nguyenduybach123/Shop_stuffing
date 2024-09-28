@@ -1,6 +1,6 @@
+import React from 'react'
 
-
-const CustomizeProducts = () => {
+export const CustomizeProducts = () => {
   return (
     <div className='flex flex-col gap-6'>
         {/* CHOOSE COLOR */}
@@ -32,5 +32,3 @@ const CustomizeProducts = () => {
     </div>
   )
 }
-
-export default CustomizeProducts;

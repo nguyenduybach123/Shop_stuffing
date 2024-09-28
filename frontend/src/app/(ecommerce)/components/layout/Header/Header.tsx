@@ -8,37 +8,13 @@ import React from 'react';
 
 const Header = () => {
 
-  React.useEffect(() => {
-    function handleScroll() {
-      const header = document.getElementById('header');
-
-      if (header === null) {
-        return;
-      }
-
-      if (window.scrollY > 100) {
-        header.classList.remove('relative');
-        header.classList.add('stickey');
-      } else {
-        header.classList.remove('stickey');
-        header.classList.add('relative');
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   return (
-    <div id="header" className="w-full bg-white h-20 px-4 md:px-8 lg:px-16 z-20">
+    <div id="header" className="sticky top-0 w-full bg-white h-20 px-4 md:px-8 lg:px-16 z-20">
       {/* MOBILE */}
       <div className='h-full flex items-center justify-between md:hidden'>
         <Link href='/'>
           <div className='text-2xl tracking-wide'>
-            CORN
+            MeU  
           </div>
         </Link>
         <NavbarMenu />
@@ -48,7 +24,7 @@ const Header = () => {
         {/* LEFT */}
         <div className='w-1/3 xl:w-1/2 flex items-center gap-12'>
           <Link href='/' className='flex items-center gap-3'>
-            <div className='text-2xl font-semibold text-slate-500'>CORN</div>
+            <div className='text-2xl font-semibold text-slate-500'>MeU</div>
           </Link>
           <div className='hidden xl:flex gap-4'>
             <Link href='/'>Home</Link>

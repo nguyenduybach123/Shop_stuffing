@@ -16,13 +16,13 @@ export const BannerSwiper = () => {
       modules={[Pagination]}
     >
       <SwiperSlide className="px-4 md:px-8 lg:px-16">
-        <Banner title="Spring" description="Spring" background="" image="" />
+        <Banner title="Spring" description="Spring"  />
       </SwiperSlide>
       <SwiperSlide className="px-4 md:px-8 lg:px-16">
-        <Banner title="Spring" description="Spring" background="" image="" />
+        <Banner title="Spring" description="Spring"  />
       </SwiperSlide>
       <SwiperSlide className="px-4 md:px-8 lg:px-16">
-        <Banner title="Spring" description="Spring" background="" image="" />
+        <Banner title="Spring" description="Spring"  />
       </SwiperSlide>
     </Swiper>
   )

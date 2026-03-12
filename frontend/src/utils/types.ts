@@ -5,6 +5,6 @@ export interface Component {
 export interface Banner extends Component {
     title: string,
     description: string,
-    background: string,
-    image: string
+    background?: string,
+    image?: string
 }
